@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700,800');
+
+body {
+  margin: 0 30px 0 30px;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: rgb(244, 244, 244);
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Nav-Bar */
+
+.nav-bar {
+  list-style-type: none;
+  padding: 30px 0px 50px 0px;
+  text-align: right;
+}
+
+.nav-bar-username {
+  padding-top: 20px;
+  display: inline;
+  float: left;
+  font-family: 'Open Sans';
+  font-weight: bold;
+}
+
+/* Login Page */
+
+.login-page {
+  padding-top: 35px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.main-logo {
+  height: 50%;
+  width: 50%;
+  margin-bottom: 35px;
+}
+
+.login-form {
+  margin: 0 auto;
+  width: 50%;
+}
+
+/* Home Page */
+
+.groups-section h2 {
+  font-family: Open Sans;
+  font-weight: 800;
+}
+
+/* Group page */
+
+.group-detail-page h2 {
+  font-size: 18px;
+  font-family: Open Sans;
+  font-weight: 700;
+  padding-bottom: 30px;
+}
+
+.segment-projects,
+.segment-recordings,
+.segment-addmedia {
+  padding: 15px !important;
+}
+
+/* Graph page */
+
+.pie-chart {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.time-slice {
+  width: 80%;
+  margin: 0 auto;
+  padding-bottom: 25px;
+}
+
+/* Lectures Video page */
+
+.video-player {
+  margin: 0 auto;
+  text-align: center;
+  margin-bottom: 35px;
+}
