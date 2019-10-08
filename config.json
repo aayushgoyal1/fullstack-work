@@ -1,0 +1,41 @@
+{
+  "uploadsDir": "uploads/videos",
+  "teacherVideosDir": "uploads/teacher_videos",
+  "processing": {
+    "maxJobs": 1,
+    "deleteAfterProcessing": false,
+    "audio": false,
+    "frames": {
+      "outputDir": "uploads/frames",
+      "fps": 10,
+      "maxFramesPerVideo": 1296000,
+      "width": 720,
+      "frameExtension": "jpg"
+    }
+  },
+  "acceptedFormats": ["mkv", "mp4", "avi", "webm", "flv", "wmv", "mov"],
+  "mongo": {
+    "dbName": "nec"
+  },
+  "featureNames": [["Neutral", "Happiness", "Sadness", "Anger"]],
+  "featureColors": [
+    [
+      "rgb(255, 245, 135)",
+      "#2ECC40",
+      "rgb(161, 135, 255)",
+      "rgb(255, 147, 147)"
+    ]
+  ],
+  "featureID": 0,
+  "SAML": {
+    "entityID": "https://utdnec.app/api/login",
+    "sign": {
+      "cert": "idp-keys/sign/cert.pem",
+      "privateKey": "idp-keys/sign/key.pem"
+    },
+    "encrypt": {
+      "cert": "idp-keys/encrypt/cert.pem",
+      "privateKey": "idp-keys/encrypt/key.pem"
+    }
+  }
+}

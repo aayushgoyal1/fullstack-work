@@ -1,0 +1,47 @@
+{
+  "name": "nec",
+  "dependencies": {
+    "cross-env": "5",
+    "react-toastify": "^5.1.0"
+  },
+  "devDependencies": {
+    "concurrently": "4",
+    "pre-commit": "1",
+    "istanbul": "0.4",
+    "lint-staged": "8",
+    "prettier": "1"
+  },
+  "eslintConfig": {
+    "extends": "react-app",
+    "plugins": [
+      "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": "error"
+    }
+  },
+  "pre-commit": "lint-staged",
+  "lint-staged": {
+    "*.{js,json,css,md}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "prettier": {
+    "singleQuote": true
+  },
+  "private": true,
+  "scripts": {
+    "develop": "concurrently --kill-others-on-fail \"cd backend && npm start\" \"cd frontend && npm start\"",
+    "start": "cd backend && cross-env NODE_ENV=production node server.js",
+    "build": "cd frontend && npm run build",
+    "preinstall": "cd backend && npm install && cd ../frontend && npm install",
+    "test": "cd backend && npm test && cd ../frontend && npm test -- --watchAll=false",
+    "precoverage": "cd backend && npm test -- --coverage && cd ../frontend && npm test -- --coverage",
+    "coverage": "istanbul report html --include=\"{frontend,backend}/coverage/coverage-final.json\"",
+    "postcoverage": "open coverage/index.html",
+    "lint-staged": "lint-staged",
+    "prelint": "rm -Rf coverage */coverage frontend/build",
+    "lint": "prettier -c \"backend/**/*.js\" \"frontend/**/*.js\""
+  }
+}

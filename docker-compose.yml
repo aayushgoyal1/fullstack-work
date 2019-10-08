@@ -1,0 +1,67 @@
+version: '2.4'
+services:
+  web:
+    build:
+      dockerfile: ./webserver.Dockerfile
+      context: .
+    restart: always
+    environment:
+      NODE_ENV: production
+      MONGODB_HOST: mongodb
+    labels:
+      traefik.frontend.rule: "Host:utdnec.app"
+      traefik.port: 80
+      traefik.docker.network: nec
+      traefik.enable: true
+    depends_on:
+      - ml
+      - mongodb
+    expose:
+      - "80"
+    networks:
+      - nec
+      - nec_internal
+    volumes:
+      - uploads:/code/uploads
+  ml:
+    build:
+      dockerfile: ./ml.Dockerfile
+      context: .
+    runtime: nvidia
+    restart: always
+    environment:
+      MONGODB_HOST: mongodb
+    labels:
+      traefik.enable: false
+    depends_on:
+      - mongodb
+    expose:
+      - "5678"
+    networks:
+      - nec_internal
+    volumes:
+      - uploads:/uploads
+  mongodb:
+    image: mongo
+    restart: always
+    entrypoint:
+      - mongod
+      - --bind_ip_all
+    expose:
+      - "27017"
+    networks:
+      - nec_internal
+    labels:
+      traefik.enable: false
+    volumes:
+      - mongodbdata:/data/db
+
+volumes:
+  uploads:
+  mongodbdata:
+
+networks:
+  nec:
+    external: true
+  nec_internal:
+    external: false
