@@ -1,0 +1,38 @@
+{
+  "name": "nec-backend",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon",
+    "test": "jest"
+  },
+  "dependencies": {
+    "body-parser": "1",
+    "chokidar": "2",
+    "cookie-parser": "1",
+    "diskusage": "1",
+    "express": "^5.0.0-alpha.7",
+    "ffmpeg-static": "2",
+    "mongodb": "3",
+    "multer": "1",
+    "passport": "0.4",
+    "passport-local": "1",
+    "passport-saml": "1",
+    "ws": "6"
+  },
+  "devDependencies": {
+    "jest": "24",
+    "nodemon": "1"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "**/*.js",
+      "!**/node_modules/**",
+      "!**/coverage/**"
+    ]
+  },
+  "optionalDependencies": {
+    "bufferutil": "4",
+    "utf-8-validate": "5"
+  }
+}

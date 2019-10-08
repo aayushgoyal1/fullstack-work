@@ -1,0 +1,87 @@
+#!/usr/bin/env node
+// USAGE: backend/stress-test [WSS URL] [resolution] [num connections]
+// EXAMPLE: backend/stress-test $'ws://localhost:3000/api/video/0a874e3f4c32d57c59fb8015/its%20a%20demo,%20please%20don\'t%20abuse%20it/5ca1994ce9b581c8e96e945f/webm' 720p 100
+// REQUIREMENTS: must have Node, must have ran npm install, and must be able to access a server with the right URL
+// If you don't have a URL, start recording a video on the website and then go to the network tab and look for the URL of the websocket connection.
+
+const { readFileSync, readdirSync } = require('fs');
+const { dirname, join } = require('path');
+const WebSocket = require('ws');
+const [url, resolution, numConnections] = process.argv.slice(2);
+require('./configure.js');
+
+const videosDir = join(dirname(__dirname), 'test-videos') + '/' + resolution + '/';
+const chunks = readdirSync(videosDir).map(chunk =>
+  readFileSync(videosDir + chunk)
+);
+const MS_BETWEEN_CHUNKS = 500;
+
+const connections = [];
+for (let i = 0; i < numConnections; i++) {
+  const promise = timePromise(connect()).catch(err =>
+    console.log('ERROR in connection', i, err)
+  );
+  connections.push(promise);
+}
+
+Promise.all(connections).then(async times => {
+  const finishedSending = process.hrtime();
+
+  console.log('Finished sending', numConnections, 'concurrent video streams.');
+  const avgTime = (times.reduce((a, b) => a + b, 0) / times.length).toFixed(3);
+  console.log('Average number of seconds to send a stream:', avgTime);
+
+  const reportProgress = async () => {
+    await sleep(1000);
+    const num = numFramesInDir();
+    const elapsedTime = secondsAfterHRTime(finishedSending).toFixed(3) + 's';
+    console.log(num + ' frames are left in frames dir after', elapsedTime);
+    if (num > 0) {
+      await reportProgress();
+    }
+  };
+  reportProgress();
+});
+
+function connect() {
+  return new Promise((resolve, reject) => {
+    const ws = new WebSocket(url);
+    ws.on('error', reject);
+    ws.on('open', async () => {
+      await Promise.all(
+        chunks.map(async (chunk, num) => {
+          // First, wait for the right amount of time when this chunk should have been sent.
+          // Note that the first chunk isn't sent immediately, it has a delay too.
+          // That's why num + 1 is used here instead of just num
+          await sleep((num + 1) * MS_BETWEEN_CHUNKS);
+          ws.send(chunk);
+        })
+      );
+
+      ws.close();
+      resolve();
+    });
+  });
+}
+
+function sleep(timeInMS) {
+  return new Promise(resolve => {
+    setTimeout(resolve, timeInMS);
+  });
+}
+
+// Times a promise to see how long it took in seconds
+function timePromise(promise) {
+  const startTime = process.hrtime();
+  return promise.then(() => secondsAfterHRTime(startTime));
+}
+
+// How much time has elapsed since a specific hrtime()?
+function secondsAfterHRTime(oldTime) {
+  const now = process.hrtime(oldTime);
+  return now[0] + now[1] / 1000000000;
+}
+
+function numFramesInDir() {
+  return readdirSync(config.processing.frames.outputDir).length;
+}
